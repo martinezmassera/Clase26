@@ -1,0 +1,28 @@
+[
+    {
+        "title": "maximiliano",
+        "price": "precio2",
+        "thumbnail": "(url al logo o foto del proucto2)",
+        "products": [],
+        "id": 1
+    },
+    {
+        "title": "maximiliano",
+        "price": "precio2",
+        "thumbnail": "(url al logo o foto del proucto2)",
+        "products": [],
+        "id": 2
+    },
+    {
+        "title": "maximiliano",
+        "price": "precio2",
+        "thumbnail": "(url al logo o foto del proucto2)",
+        "products": [
+            {
+                "title": "maximiliano",
+                "id": 3
+            }
+        ],
+        "id": 3
+    }
+]
