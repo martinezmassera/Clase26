@@ -7,7 +7,7 @@ const router = Router();
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 
-const cartDao = switchDao('mongo')
+const cartDao = switchDao()
 
 router.get('/', async (req, res) => {
     res.send(await cartDao.cart.getAll())
