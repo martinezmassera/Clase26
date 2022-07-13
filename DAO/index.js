@@ -25,7 +25,7 @@ const switchDao = () => {
                 product: new productosFileDao()
             }
         case 'memory':
-            console.log('Memoria')
+             console.log('Memoria')
             return {
                 cart: new cartMemoriaeDAO(),
                 product: new productosMemoriaeDao()
@@ -33,8 +33,7 @@ const switchDao = () => {
     }
    
 
-    throw new Error('TYPEDB is not found')
-}
+    throw new Error('Error')}
 
 
 module.exports = switchDao
