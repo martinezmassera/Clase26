@@ -10,18 +10,20 @@ router.use(express.urlencoded({ extended: true }));
 const prodDao = switchDao()
 
 router.get('/', async (req, res) => {
-    res.send(await prodDao.Prod.getAll())
+    res.send(await prodDao.product.getAll())
 });
 
 router.post('/', async (req, res) => {
-    res.send(await prodDao.Prod.add(req.body))
+    res.send(await prodDao.product.add(req.body))
 })
-
+router.post('/test', async (req, res) => {
+    res.send(await prodDao.product.populate())
+})
 
 router.get('/:id?', async (req, res) => {
     const admin = req.headers.admin;
     const id = req.params.id;
-    res.send(await prodDao.Prod.getByID(id));
+    res.send(await prodDao.product.getByID(id));
 
 });
 
@@ -30,11 +32,11 @@ router.put('/edit/:id', async (req, res) => {
     const newProd = req.body;
     const id = req.params.id;
     const admin = req.headers.admin;
-    res.send(await prodDao.Prod.editById(newProd, id))
+    res.send(await prodDao.product.editById(newProd, id))
 })
 
 router.delete('/:id', async (req, res) => {
-    res.send(await prodDao.Prod.deleteByID(id));
+    res.send(await prodDao.product.deleteByID(id));
 })
 
 module.exports = router;

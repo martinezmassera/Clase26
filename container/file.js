@@ -1,5 +1,5 @@
 const fs = require('fs');
-
+const { faker } = require('@faker-js/faker')
 class ContenedorFile {
 
     constructor(archivo) {
@@ -30,6 +30,26 @@ class ContenedorFile {
             this.id = lastItem.id + 1
         }
         return this.id
+    }
+
+    newProduct() {
+        return {
+            name: faker.commerce.product(),
+            lastname: faker.commerce.productName(),
+            website: faker.internet.url(),
+            image: faker.image.avatar()
+        }
+    }
+
+    async populate(cant = 5) {
+        const news = []
+        for (let i = 0; i < cant; i++) {
+            const product = this.newProduct()
+            this.add(product)
+            news.push(product)
+        }
+
+        return news
     }
 
     async getAll() {
