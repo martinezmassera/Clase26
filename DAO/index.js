@@ -1,5 +1,8 @@
 const cartFileDAO = require('./cart/cartFileDAO')
 const cartMemoriaeDAO = require('./cart/cartMemoriaDAO')
+const chatMongoDAO = require('./chat/chatMongoDAO')
+const chatFileDAO = require('./chat/chatFileDAO')
+const chatMemoriaeDAO = require('./chat/chatMemoriaDAO')
 const cartMongoDAO = require('./cart/cartMongoDAO')
 const productosFileDao = require('./products/productosFileDAO')
 const productosMemoriaeDao = require('./products/productosMemoriaDAO')
@@ -16,18 +19,21 @@ const switchDao = () => {
             console.log('Mongo')
             return {
                 cart: new cartMongoDAO(),
+                chat: new chatMongoDAO(),
                 product: new productosMongoDao()
             }
         case 'file':
             console.log('Archivo')
             return {
                 cart: new cartFileDAO(),
+                chat: new chatFileDAO(),
                 product: new productosFileDao()
             }
         case 'memory':
              console.log('Memoria')
             return {
                 cart: new cartMemoriaeDAO(),
+                chat: new chatMemoriaeDAO(),
                 product: new productosMemoriaeDao()
             }
     }

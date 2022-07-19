@@ -35,9 +35,8 @@ class ContenedorFile {
     newProduct() {
         return {
             name: faker.commerce.product(),
-            lastname: faker.commerce.productName(),
-            website: faker.internet.url(),
-            image: faker.image.avatar()
+            price: faker.commerce.price(),
+            thumbnail:  faker.image.avatar()
         }
     }
 
@@ -45,7 +44,7 @@ class ContenedorFile {
         const news = []
         for (let i = 0; i < cant; i++) {
             const product = this.newProduct()
-            this.add(product)
+            // this.add(product)
             news.push(product)
         }
 
