@@ -1,5 +1,4 @@
 const fs = require('fs');
-const { faker } = require('@faker-js/faker')
 class ContenedorFile {
 
     constructor(archivo) {
@@ -32,26 +31,8 @@ class ContenedorFile {
         return this.id
     }
 
-    newProduct() {
-        return {
-            name: faker.commerce.product(),
-            price: faker.commerce.price(),
-            thumbnail:  faker.image.avatar()
-        }
-    }
-
-    async populate(cant = 5) {
-        const news = []
-        for (let i = 0; i < cant; i++) {
-            const product = this.newProduct()
-            // this.add(product)
-            news.push(product)
-        }
-
-        return news
-    }
-
     async getAll() {
+        this.read()
         return this.datos
     }
 
@@ -60,6 +41,7 @@ class ContenedorFile {
         datos['id'] = id
         this.datos.push(datos)
         this.write()
+        this.read()
 
         return datos
     }
@@ -67,6 +49,7 @@ class ContenedorFile {
     async deleteAll() {
         this.datos = []
         this.write()
+        this.read()
     }
 
     async getByID(id) {
@@ -79,12 +62,16 @@ class ContenedorFile {
         const busqueda = this.datos.findIndex(dato => dato.id === id)
         this.datos.splice(busqueda, 1, datos)
         this.write()
+        this.read()
+
     }
 
     async deleteByID(id) {
         const busqueda = this.datos.findIndex(dato => dato.id == id)
         this.datos.splice(busqueda, 1)
         this.write()
+        this.read()
+
     }
 
     async addToCart(idCart, product) {
@@ -98,6 +85,8 @@ class ContenedorFile {
         console.log(cart.products.length)
         cart.products.push(product)
         this.write()
+        this.read()
+
     }
 
     async deleteProdInCart(idCart, idProd) {
@@ -105,6 +94,8 @@ class ContenedorFile {
         const prodIndex = buscaCart.products.findIndex(dato => dato.id == idProd)
         buscaCart.products.splice(prodIndex, 1)
         this.write()
+        this.read()
+
         return
     }
 

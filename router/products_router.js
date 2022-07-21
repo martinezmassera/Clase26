@@ -10,14 +10,13 @@ router.use(express.urlencoded({ extended: true }));
 const prodDao = switchDao()
 
 router.get('/', async (req, res) => {
-    res.send(await prodDao.product.getAll())
+    const products = await prodDao.product.getAll()
+    res.render('form', { products })
+    // res.send(await prodDao.product.getAll())
 });
 
 router.post('/', async (req, res) => {
     res.send(await prodDao.product.add(req.body))
-})
-router.post('/test', async (req, res) => {
-    res.send(await prodDao.product.populate())
 })
 
 router.get('/:id?', async (req, res) => {

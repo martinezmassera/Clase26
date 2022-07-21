@@ -65,10 +65,29 @@ function chat() {
     }
 }
 
+
+
+
 socket.on('messages', (chat) => {
-console.log(chat)
-    const chatWeb = chat.map(element => {
-        return (`<div><strong class="author">${element.author}</strong> <span class="Hora">[${element.time}]: <em class="texto">${element.text}</em></div>`)
+    //Normalizr:
+    const persona = new normalizr.schema.Entity('persona')
+    const textoSchema = new normalizr.schema.Entity('texto')
+    const msj = new normalizr.schema.Entity('mensaje', {
+        author: persona,
+        texto: textoSchema
+    }, { idAttribute: 'id' })
+
+    const dataDevuelta = normalizr.denormalize(
+        chat.result,
+        [msj],
+        chat.entities
+    )
+    comp.innerHTML = Math.floor((JSON.stringify(chat).length * 100) / JSON.stringify(dataDevuelta).length)
+   
+    const chatWeb = dataDevuelta.map(element => {
+        return (`<div>
+        <img src="${element.author.avatar}" style="margin: 5px; max-width: 50px; max-heigth: 50px;" alt="img"></img>
+        <strong class="author">${element.author.alias}</strong> <span class="Hora">[${element.time}]: <em class="texto">${element.text}</em></div>`)
     }).join(' ');
     document.getElementById('messages').innerHTML = chatWeb
 });
@@ -78,12 +97,12 @@ console.log(chat)
 const addMessage = () => {
     const message = {
         author: {
-            id: mail, 
-            nombre: 'nombre del usuario', 
-            apellido: 'apellido del usuario', 
-            edad: 'edad del usuario', 
-            alias: 'alias del usuario',
-            avatar: 'url avatar (foto, logo) del usuario'
+            id: mail,
+            name: document.getElementById('name').value,
+            lastName: document.getElementById('lastName').value,
+            age: document.getElementById('age').value,
+            alias: document.getElementById('alias').value,
+            avatar: document.getElementById('avatar').value,
         },
         text: document.getElementById('text').value
     };
@@ -96,7 +115,7 @@ const elementochat = document.getElementById('formchat')
 elementochat.addEventListener('submit', (event) => {
     event.preventDefault();
     addMessage()
-    
+
 })
 
 function ValidaCorreo(valor) {
