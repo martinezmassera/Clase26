@@ -1,5 +1,7 @@
 const express = require('express')
+const session = require('express-session')
 const http = require('http');
+const MongoStore = require('connect-mongo')
 const { Server } = require("socket.io");
 const switchDao = require('./DAO')
 
@@ -15,19 +17,43 @@ const PORT = process.env.PORT || 8080;
 const server = http.createServer(app);
 const io = new Server(server);
 
-const chatDao = switchDao()
-app.use(express.static('public'))
-
-app.get('/', (req, res) => {
-    res.render('index')
-
-})
-
-
-
 const cart = require('./router/cart_Router');
 const prod = require('./router/products_router');
 const prodFake = require('./router/product_fake');
+const chatDao = switchDao()
+app.use(express.static('public'))
+
+app.use(session({
+    store: MongoStore.create({ mongoUrl: 'mongodb+srv://martinezmassera:k8bpJCkdfXoCG0o0@cursocoderback.ssztq.mongodb.net/?retryWrites=true&w=majority' }),
+    secret: 'thesecret',
+    resave: false,
+    saveUninitialized: false
+}))
+
+app.get('/login', (req, res) => {
+    if (req.session.username) {
+        res.redirect('/')
+    }
+    res.sendFile(__dirname + '/views/login.html')
+})
+
+app.post('/login', (req, res) => {
+    req.session.username = req.body.username
+    res.redirect('/')
+})
+
+app.get('/', (req, res) => {
+    if (!req.session.username) {
+        res.redirect('/login')
+    }
+
+    res.render('index', {username: req.session.username})
+})
+
+app.get('/logout', (req, res) => {
+    req.session.destroy()
+    res.sendFile(__dirname + '/views/logout.html')
+})
 
 
 app.use('/carrito', cart);

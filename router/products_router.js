@@ -12,7 +12,6 @@ const prodDao = switchDao()
 router.get('/', async (req, res) => {
     const products = await prodDao.product.getAll()
     res.render('form', { products })
-    // res.send(await prodDao.product.getAll())
 });
 
 router.post('/', async (req, res) => {

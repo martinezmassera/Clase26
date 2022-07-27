@@ -9,9 +9,13 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>Formulario</title>
     <link rel="stylesheet" href="/CSS/style.css">
- </head>
+</head>
 
 <body>
+    <h1>
+        <%=username %>
+    </h1>
+    <a href="/logout">Logout</a>
     <div class="container">
         <div class="row">
             <div class="col-md-6">
@@ -53,10 +57,11 @@
                 <button id="chatInit" onclick="chat()" class="btn btn-primary">Iniciar chat</button>
                 <div id="chat" style="display: none">
                     <div style="display: flex; align-items: center; color: rgb(70, 24, 196);">
-                        <h3 style="margin-right: 10px;" >Compresión: </h3>
-                        <h5 id="comp" style="margin-right: 5px;"  ></h5><h3>%</h3>
-                      </div>
-                    <form id="formchat" >
+                        <h3 style="margin-right: 10px;">Compresión: </h3>
+                        <h5 id="comp" style="margin-right: 5px;"></h5>
+                        <h3>%</h3>
+                    </div>
+                    <form id="formchat">
                         <input type="text" name="name" id="name" required>
                         <input type="text" name="lastName" id="lastName" required>
                         <input type="number" name="age" id="age" required>
@@ -71,7 +76,7 @@
                     </div>
                 </div>
             </div>
-           
+
         </div>
         <div id="tableProducts"></div>
     </div>
