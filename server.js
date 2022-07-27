@@ -26,33 +26,36 @@ app.use(express.static('public'))
 app.use(session({
     store: MongoStore.create({ mongoUrl: 'mongodb+srv://martinezmassera:k8bpJCkdfXoCG0o0@cursocoderback.ssztq.mongodb.net/?retryWrites=true&w=majority' }),
     secret: 'thesecret',
-    resave: false,
-    saveUninitialized: false
+    cookie: { maxAge: 600000 },
+    resave: true,
+    saveUninitialized: true
 }))
 
 app.get('/login', (req, res) => {
     if (req.session.username) {
-        res.redirect('/')
+        return res.redirect('/')
     }
-    res.sendFile(__dirname + '/views/login.html')
+    return res.render('login')
 })
 
 app.post('/login', (req, res) => {
     req.session.username = req.body.username
-    res.redirect('/')
+    return res.redirect('/')
 })
 
 app.get('/', (req, res) => {
+    req.session.touch()
+    const username = req.session.username
     if (!req.session.username) {
-        res.redirect('/login')
+        return res.redirect('/login')
     }
-
-    res.render('index', {username: req.session.username})
+    return res.render('index', { username })
 })
 
 app.get('/logout', (req, res) => {
+    const username = req.session.username
     req.session.destroy()
-    res.sendFile(__dirname + '/views/logout.html')
+    res.render('logout', { username })
 })
 
 
