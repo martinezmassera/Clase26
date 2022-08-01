@@ -1,5 +1,10 @@
 const express = require('express')
 const session = require('express-session')
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const bodyParser = require("body-parser");
+const mongoose = require('mongoose');
+
 const http = require('http');
 const MongoStore = require('connect-mongo')
 const { Server } = require("socket.io");
@@ -31,6 +36,7 @@ app.use(session({
     saveUninitialized: true
 }))
 
+
 app.get('/login', (req, res) => {
     if (req.session.username) {
         return res.redirect('/')
@@ -38,10 +44,65 @@ app.get('/login', (req, res) => {
     return res.render('login')
 })
 
-app.post('/login', (req, res) => {
+app.post('/login', async(req, res) => {
+    try {
+        const username = req.body.username
+        const user = await User.findOne({ username: req.body.username });
+        console.log(user);
+        if (user) {
+          const cmp = await bcrypt.compare(req.body.password, user.password);
+          if (cmp) {
+            //   ..... further code to maintain authentication like jwt or sessions
+            return res.render('index', { username })
+          } else {
+            return res.redirect('/')
+          }
+        } else {
+            return res.redirect('/');
+        }
+      } catch (error) {
+        console.log(error);
+        res.status(500).send("Internal Server error Occured");
+      }
     req.session.username = req.body.username
-    return res.redirect('/')
+    
 })
+
+app.get('/signup', (req, res) => {
+    if (req.session.username) {
+        return res.redirect('/')
+    }
+    return res.render('signup')
+})
+
+
+mongoose.connect("mongodb+srv://martinezmassera:k8bpJCkdfXoCG0o0@cursocoderback.ssztq.mongodb.net/?retryWrites=true&w=majority", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+var userSchema = new mongoose.Schema({
+  username: String,
+  password: String,
+  joined: { type: Date, default: Date.now },
+});
+
+const User = mongoose.model("user", userSchema);
+
+app.post('/signup', async (req, res) => {
+    console.log(req.body);
+  try {
+    const hashedPwd = await bcrypt.hash(req.body.password, saltRounds);
+    const insertResult = await User.create({
+      username: req.body.username,
+      password: hashedPwd,
+    });
+    res.send(insertResult);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server error Occured");
+  }
+});
 
 app.get('/', (req, res) => {
     req.session.touch()
