@@ -52,13 +52,14 @@ app.post('/login', async(req, res) => {
         if (user) {
           const cmp = await bcrypt.compare(req.body.password, user.password);
           if (cmp) {
-            //   ..... further code to maintain authentication like jwt or sessions
             return res.render('index', { username })
           } else {
-            return res.redirect('/')
+            const estado = 'Pass Incorrecto'
+            return res.render('errorlogin', { estado })
           }
         } else {
-            return res.redirect('/');
+          const estado = 'Usuario no registrado'
+          return res.render('errorlogin', { estado })
         }
       } catch (error) {
         console.log(error);
@@ -90,14 +91,13 @@ var userSchema = new mongoose.Schema({
 const User = mongoose.model("user", userSchema);
 
 app.post('/signup', async (req, res) => {
-    console.log(req.body);
   try {
     const hashedPwd = await bcrypt.hash(req.body.password, saltRounds);
-    const insertResult = await User.create({
+    await User.create({
       username: req.body.username,
       password: hashedPwd,
     });
-    res.send(insertResult);
+    return res.redirect('/login')
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server error Occured");
